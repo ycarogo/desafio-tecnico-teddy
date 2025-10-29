@@ -1,10 +1,17 @@
-import { getUsers } from "@/services/user.service";
+import {
+  createUser,
+  deleteUser,
+  getUsers,
+  updateUser,
+} from "@/services/user.service";
 import type { OutputUsers } from "@/types/outputUsers";
 import type { InputUser } from "@/types/inputUser";
 import { useEffect, useState, useCallback } from "react";
 import CardClient from "../components/CardClient";
 import Modal from "@/components/ui/modal";
 import FormClient from "@/components/FormClient";
+import type { User } from "@/types/users";
+import ConfirmToDeleteClient from "@/components/ConfirmToDeleteClient";
 
 export default function Clients() {
   const [outputUsers, setOutputUsers] = useState<OutputUsers>({
@@ -16,7 +23,9 @@ export default function Clients() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalClients, setTotalClients] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [userToEdit, setUserToEdit] = useState<User | null>(null);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
   const fetchUsers = useCallback(async () => {
     const response = await getUsers(currentPage, clientsPerPage);
     setOutputUsers(response);
@@ -43,6 +52,7 @@ export default function Clients() {
   };
 
   const handleCreateClient = () => {
+    setUserToEdit(null);
     setIsModalOpen(true);
   };
 
@@ -50,10 +60,37 @@ export default function Clients() {
     setIsModalOpen(false);
   };
 
-  const handleSubmitClient = (userData: InputUser) => {
-    // Implementar criação de cliente
-    console.log("Criando cliente:", userData);
-    // Aqui você pode adicionar a lógica para enviar os dados para a API
+  const handleCloseModalDeleteOpen = () => {
+    setIsModalDeleteOpen(false);
+  };
+
+  const handleSubmitClient = async (userData: InputUser) => {
+    if (userToEdit) {
+      await updateUser(userToEdit.id, userData as User)
+        .then(() => {
+          console.log("Cliente atualizado com sucesso");
+          handleCloseModal();
+          fetchUsers();
+        })
+        .catch(() => {
+          console.error("Erro ao atualizar cliente");
+        });
+    } else {
+      const inputUser: InputUser = {
+        name: userData.name,
+        salary: userData.salary,
+        companyValuation: userData.companyValuation,
+      };
+      await createUser(inputUser)
+        .then(() => {
+          handleCloseModal();
+          fetchUsers();
+          console.log("Cliente criado com sucesso");
+        })
+        .catch(() => {
+          console.error("Erro ao criar cliente");
+        });
+    }
   };
 
   const handleAddClient = (userId: number) => {
@@ -61,14 +98,28 @@ export default function Clients() {
     console.log("Adicionar cliente:", userId);
   };
 
-  const handleEditClient = (userId: number) => {
-    // Implementar edição de cliente
-    console.log("Editar cliente:", userId);
+  const handleEditClient = (user: User) => {
+    setIsModalOpen(true);
+    setUserToEdit(user);
   };
 
-  const handleDeleteClient = (userId: number) => {
-    // Implementar exclusão de cliente
-    console.log("Excluir cliente:", userId);
+  const handleDeleteClient = (user: User) => {
+    setUserToDelete(user);
+    setIsModalDeleteOpen(true);
+  };
+
+  const confirmDeleteClient = async () => {
+    if (userToDelete) {
+      await deleteUser(userToDelete.id)
+        .then(() => {
+          console.log("Cliente excluído com sucesso");
+        })
+        .catch(() => {
+          console.error("Erro ao excluir cliente");
+        });
+      handleCloseModalDeleteOpen();
+      fetchUsers();
+    }
   };
 
   const generatePageNumbers = () => {
@@ -137,8 +188,8 @@ export default function Clients() {
             key={user.id}
             user={user}
             onAdd={() => handleAddClient(user.id)}
-            onEdit={() => handleEditClient(user.id)}
-            onDelete={() => handleDeleteClient(user.id)}
+            onEdit={() => handleEditClient(user)}
+            onDelete={() => handleDeleteClient(user)}
           />
         ))}
       </div>
@@ -177,15 +228,26 @@ export default function Clients() {
 
       {/* Modal */}
       <Modal
-        title="Criar cliente"
+        title={userToEdit ? "Editar cliente" : "Criar cliente"}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         children={
           <FormClient
             onSubmit={handleSubmitClient}
-            user={undefined}
-            submitButtonText="Criar cliente"
+            user={userToEdit}
+            submitButtonText={userToEdit ? "Editar cliente" : "Criar cliente"}
             onCancel={undefined}
+          />
+        }
+      />
+      <Modal
+        title="Excluir cliente"
+        isOpen={isModalDeleteOpen}
+        onClose={handleCloseModalDeleteOpen}
+        children={
+          <ConfirmToDeleteClient
+            onConfirm={confirmDeleteClient}
+            user={userToDelete}
           />
         }
       />

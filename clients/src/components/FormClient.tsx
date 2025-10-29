@@ -27,7 +27,7 @@ type UserFormData = z.infer<typeof userSchema>;
 
 interface FormClientProps {
   onSubmit: (user: InputUser) => void;
-  user?: User;
+  user?: User | null;
   submitButtonText?: string;
   onCancel?: () => void;
 }

@@ -22,7 +22,7 @@ export default function CardClient({
   };
 
   return (
-    <div className="bg-white rounded-sm p-4 shadow-sm border border-gray-200">
+    <div className="bg-white rounded-sm p-4 shadow-sm border border-gray-200 text-center">
       {/* Nome do usuário */}
       <h3 className="font-bold text-black text-lg mb-2">{user.name}</h3>
 
