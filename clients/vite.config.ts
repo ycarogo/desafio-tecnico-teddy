@@ -14,7 +14,7 @@ export default defineConfig({
       filename: "remoteEntry.js",
       // Modules to expose
       exposes: {
-        "./App": "./src/App.tsx",
+        "./Clients": "./src/pages/Clients.tsx",
       },
       shared: ["react", "react-dom"],
     }),

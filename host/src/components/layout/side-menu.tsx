@@ -54,6 +54,12 @@ export const SideMenu: React.FC<SideMenuProps> = ({
       <div className="flex-1 bg-white pl-6 py-6">
         <nav className="space-y-4">
           {/* Home Item */}
+          <div className="flex items-center space-x-4 py-3 cursor-pointer px-3 transition-colors">
+            <Home className="w-6 h-6" />
+            <span className="font-medium">Home</span>
+          </div>
+
+          {/* Clientes Item */}
           <div
             onClick={() => handleNavigation("/dashboard")}
             className={cn(
@@ -63,7 +69,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({
                 : "hover:bg-gray-50 rounded-lg"
             )}
           >
-            <Home
+            <User
               className={cn(
                 "w-6 h-6",
                 isActive("/dashboard") ? "text-orange-400" : "text-black"
@@ -73,32 +79,6 @@ export const SideMenu: React.FC<SideMenuProps> = ({
               className={cn(
                 "font-medium",
                 isActive("/dashboard") ? "text-orange-500" : "text-black"
-              )}
-            >
-              Home
-            </span>
-          </div>
-
-          {/* Clientes Item */}
-          <div
-            onClick={() => handleNavigation("/clientes")}
-            className={cn(
-              "flex items-center space-x-4 py-3 cursor-pointer px-3 transition-colors",
-              isActive("/clientes")
-                ? "border-r-4 border-orange-400"
-                : "hover:bg-gray-50 rounded-lg"
-            )}
-          >
-            <User
-              className={cn(
-                "w-6 h-6",
-                isActive("/clientes") ? "text-orange-400" : "text-black"
-              )}
-            />
-            <span
-              className={cn(
-                "font-medium",
-                isActive("/clientes") ? "text-orange-500" : "text-black"
               )}
             >
               Clientes

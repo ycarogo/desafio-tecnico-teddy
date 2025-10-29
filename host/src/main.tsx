@@ -4,6 +4,7 @@ import "./global.css";
 import Login from "./pages/Login";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
+import SelectedList from "./pages/SelectedList";
 
 const router = createBrowserRouter([
   {
@@ -15,12 +16,8 @@ const router = createBrowserRouter([
     Component: Dashboard,
   },
   {
-    path: "/clientes",
-    Component: Dashboard,
-  },
-  {
     path: "/clientes-selecionados",
-    Component: Dashboard,
+    Component: SelectedList,
   },
 ]);
 

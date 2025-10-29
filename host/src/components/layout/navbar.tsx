@@ -69,10 +69,11 @@ export default function Navbar() {
               <div className="flex items-center space-x-8">
                 <a
                   href="#"
+                  onClick={() => navigate("/dashboard")}
                   className={cn(
-                    "text-orange-500 font-medium border-b-2 border-orange-500 pb-1",
-                    currentPath === "/clientes"
-                      ? "text-orange-500"
+                    "text-orange-500 font-medium pb-1 cursor-pointer",
+                    currentPath === "/dashboard"
+                      ? "text-orange-500 border-b-2 border-orange-500"
                       : "text-gray-700 hover:text-gray-900"
                   )}
                 >
@@ -80,10 +81,11 @@ export default function Navbar() {
                 </a>
                 <a
                   href="#"
+                  onClick={() => navigate("/clientes-selecionados")}
                   className={cn(
-                    "text-gray-700 hover:text-gray-900 font-medium",
+                    "text-gray-700 hover:text-gray-900 font-medium pb-1 cursor-pointer",
                     currentPath === "/clientes-selecionados"
-                      ? "text-orange-500"
+                      ? "text-orange-500 border-b-2 border-orange-500"
                       : "text-gray-700 hover:text-gray-900"
                   )}
                 >
