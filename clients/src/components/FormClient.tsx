@@ -1,29 +1,10 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import type { InputUser } from "@/types/inputUser";
 import type { User } from "@/types/users";
-
-// Schema de validação com Zod
-const userSchema = z.object({
-  name: z
-    .string()
-    .min(1, "Nome é obrigatório")
-    .min(2, "Nome deve ter pelo menos 2 caracteres")
-    .max(100, "Nome deve ter no máximo 100 caracteres"),
-  salary: z
-    .number()
-    .min(0, "Salário deve ser maior ou igual a 0")
-    .max(999999999, "Salário deve ser menor que 1 bilhão"),
-  companyValuation: z
-    .number()
-    .min(0, "Valor da empresa deve ser maior ou igual a 0")
-    .max(999999999999, "Valor da empresa deve ser menor que 1 trilhão"),
-});
-
-type UserFormData = z.infer<typeof userSchema>;
+import { useCurrencyMask } from "@/hooks/useCurrencyMask";
+import { removeFormatCurrency } from "@/lib/removeFormatCurrency";
 
 interface FormClientProps {
   onSubmit: (user: InputUser) => void;
@@ -41,20 +22,39 @@ export default function FormClient({
   const isEditMode = !!user;
 
   const {
+    displayValue: salary,
+    handleChange: handleChangeSalary,
+    setValue: setSalary,
+  } = useCurrencyMask(0, "R$", "", false);
+  const {
+    displayValue: companyValuation,
+    handleChange: handleChangeCompanyValuation,
+    setValue: setCompanyValuation,
+  } = useCurrencyMask(0, "R$", "", false);
+
+  const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<UserFormData>({
-    resolver: zodResolver(userSchema),
-    defaultValues: {
-      name: user?.name || "",
-      salary: user?.salary || 0,
-      companyValuation: user?.companyValuation || 0,
+    control,
+  } = useForm<InputUser>({
+    defaultValues: async () => {
+      setSalary(user?.salary || 0);
+      setCompanyValuation(user?.companyValuation || 0);
+      return {
+        name: user?.name || "",
+        salary: user?.salary || 0,
+        companyValuation: user?.companyValuation || 0,
+      };
     },
   });
 
-  const handleFormSubmit = (data: UserFormData) => {
+  const handleFormSubmit = (data: InputUser) => {
+    data.salary = removeFormatCurrency(data.salary.toString());
+    data.companyValuation = removeFormatCurrency(
+      data.companyValuation.toString()
+    );
     onSubmit(data);
     if (!isEditMode) {
       reset();
@@ -73,32 +73,48 @@ export default function FormClient({
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-1">
       {/* Campo Nome */}
       <Input
-        {...register("name")}
+        {...register("name", { required: true })}
         label="Nome"
         placeholder="Digite o nome do cliente"
         error={errors.name?.message}
       />
 
-      {/* Campo Salário */}
-      <Input
-        {...register("salary", { valueAsNumber: true })}
-        type="number"
-        label="Salário"
-        placeholder="Digite o salário"
-        error={errors.salary?.message}
-        step="0.01"
-        min="0"
+      <Controller
+        name="salary"
+        control={control}
+        rules={{ required: true }}
+        render={({ field }) => (
+          <Input
+            label="Salário"
+            type="text"
+            value={salary}
+            onChange={(e) => {
+              handleChangeSalary(e);
+              field.onChange(e.target.value);
+            }}
+            error={errors.salary?.message}
+            placeholder="Digite o salário"
+          />
+        )}
       />
 
-      {/* Campo Valor da Empresa */}
-      <Input
-        {...register("companyValuation", { valueAsNumber: true })}
-        type="number"
-        label="Valor da Empresa"
-        placeholder="Digite o valor da empresa"
-        error={errors.companyValuation?.message}
-        step="0.01"
-        min="0"
+      <Controller
+        name="companyValuation"
+        control={control}
+        rules={{ required: true }}
+        render={({ field }) => (
+          <Input
+            label="Salário"
+            type="text"
+            value={companyValuation}
+            onChange={(e) => {
+              handleChangeCompanyValuation(e);
+              field.onChange(e.target.value);
+            }}
+            error={errors.companyValuation?.message}
+            placeholder="Digite o valor da empresa"
+          />
+        )}
       />
 
       {/* Botões */}

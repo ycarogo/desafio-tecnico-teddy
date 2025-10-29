@@ -15,6 +15,7 @@ export default defineConfig({
       // Modules to expose
       exposes: {
         "./Clients": "./src/pages/Clients.tsx",
+        "./ListClients": "./src/pages/ListClients.tsx",
       },
       shared: ["react", "react-dom"],
     }),

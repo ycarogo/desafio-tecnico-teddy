@@ -35,9 +35,7 @@ export default function Navbar() {
         <nav className="bg-white shadow-sm border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
             <div className="flex justify-between items-center h-25">
-              {/* Lado esquerdo - Menu hamburger e Logo */}
               <div className="flex items-center space-x-4">
-                {/* Menu hamburger */}
                 <button
                   onClick={toggleSideMenu}
                   className="p-2 rounded-md text-gray-600 hover:text-gray-900 cursor-pointer hover:bg-gray-100"
@@ -71,7 +69,7 @@ export default function Navbar() {
                   href="#"
                   onClick={() => navigate("/dashboard")}
                   className={cn(
-                    "text-orange-500 font-medium pb-1 cursor-pointer",
+                    "text-orange-500 font-medium pb-1 cursor-pointer hidden md:block",
                     currentPath === "/dashboard"
                       ? "text-orange-500 border-b-2 border-orange-500"
                       : "text-gray-700 hover:text-gray-900"
@@ -83,7 +81,7 @@ export default function Navbar() {
                   href="#"
                   onClick={() => navigate("/clientes-selecionados")}
                   className={cn(
-                    "text-gray-700 hover:text-gray-900 font-medium pb-1 cursor-pointer",
+                    "text-gray-700 hover:text-gray-900 font-medium pb-1 cursor-pointer hidden md:block",
                     currentPath === "/clientes-selecionados"
                       ? "text-orange-500 border-b-2 border-orange-500"
                       : "text-gray-700 hover:text-gray-900"
@@ -94,7 +92,7 @@ export default function Navbar() {
                 <a
                   href="#"
                   onClick={clickLogout}
-                  className="text-gray-700 hover:text-gray-900 font-medium"
+                  className="text-gray-700 hover:text-gray-900 font-medium hidden md:block"
                 >
                   Sair
                 </a>

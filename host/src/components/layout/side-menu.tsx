@@ -1,7 +1,8 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { ArrowLeftIcon, Home, User, UserCheck } from "lucide-react";
+import { ArrowLeftIcon, Home, LogOut, User, UserCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { logoutService } from "@/service/login.service";
 
 interface SideMenuProps {
   className?: string;
@@ -19,6 +20,11 @@ export const SideMenu: React.FC<SideMenuProps> = ({
   const handleNavigation = (path: string) => {
     navigate(path);
     if (onClose) onClose();
+  };
+
+  const clickLogout = () => {
+    logoutService();
+    navigate("/");
   };
 
   const isActive = (path: string) => currentPath === path;
@@ -49,17 +55,12 @@ export const SideMenu: React.FC<SideMenuProps> = ({
           </button>
         )}
       </div>
-
-      {/* Content Area */}
       <div className="flex-1 bg-white pl-6 py-6">
         <nav className="space-y-4">
-          {/* Home Item */}
           <div className="flex items-center space-x-4 py-3 cursor-pointer px-3 transition-colors">
             <Home className="w-6 h-6" />
             <span className="font-medium">Home</span>
           </div>
-
-          {/* Clientes Item */}
           <div
             onClick={() => handleNavigation("/dashboard")}
             className={cn(
@@ -85,7 +86,6 @@ export const SideMenu: React.FC<SideMenuProps> = ({
             </span>
           </div>
 
-          {/* Clientes selecionados Item */}
           <div
             onClick={() => handleNavigation("/clientes-selecionados")}
             className={cn(
@@ -114,10 +114,15 @@ export const SideMenu: React.FC<SideMenuProps> = ({
               Clientes selecionados
             </span>
           </div>
+          <div
+            onClick={clickLogout}
+            className="flex items-center space-x-4 py-3 cursor-pointer px-3 transition-colors"
+          >
+            <LogOut className="w-6 h-6" />
+            <span className="font-medium">Sair</span>
+          </div>
         </nav>
       </div>
-
-      {/* Bottom shadow */}
       <div className="h-2 bg-linear-to-t from-gray-100 to-transparent"></div>
     </div>
   );
