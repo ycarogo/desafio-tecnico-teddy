@@ -63,6 +63,54 @@ Observações:
 - O `host/vite.config.ts` usa `VITE_URL_REMOTE` para montar o caminho do `remoteEntry.js` do `clients`.
 - O `clients/vite.config.ts` expõe `./Clients` e `./ListClients` via Module Federation.
 
+## Execução com Docker Compose
+
+Com Docker/Docker Compose você sobe tudo com um comando (sem precisar rodar os dois apps manualmente).
+
+### Pré-requisitos
+
+- Docker 24+
+- Docker Compose V2
+
+### Subir os serviços
+
+```bash
+docker compose up -d --build
+```
+
+Isso irá:
+
+- subir `clients` em `http://localhost:5174` (build e preview dentro do container)
+- subir `host` em `http://localhost:5173` (modo dev dentro do container)
+- injetar a variável `VITE_URL_REMOTE=http://localhost:5174` no `host`
+
+### Ver logs
+
+```bash
+docker compose logs -f host
+docker compose logs -f clients
+```
+
+### Parar serviços
+
+```bash
+docker compose down
+```
+
+### Reconstruir após mudanças importantes
+
+Se trocar dependências ou configs do Vite, force rebuild:
+
+```bash
+docker compose up -d --build
+```
+
+Para alterações de código fonte, com os volumes mapeados, o `host` (modo dev) e o `clients` (preview) refletem mudanças na maioria dos casos. Se notar artefatos antigos no `clients`, rode novamente o comando acima.
+
+### Alterar portas
+
+As portas padrão são `5173` (host) e `5174` (clients). Para mudar, edite `docker-compose.yml` (seções `ports`) e ajuste a variável `VITE_URL_REMOTE` do serviço `host` para apontar para a nova porta do `clients`.
+
 ## Variáveis de ambiente
 
 No `host/.env` defina:
