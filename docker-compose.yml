@@ -5,17 +5,28 @@ services:
     build:
       context: ./clients
       dockerfile: Dockerfile
+    volumes:
+      - ./clients:/app
     ports:
       - "5174:5174"
-    command: ["npm", "run", "dev", "--", "--host", "--port", "5174"]
+    networks:
+      - default
 
   host:
     build:
       context: ./host
       dockerfile: Dockerfile
+    volumes:
+      - ./host:/app
     environment:
-      - VITE_URL_REMOTE=http://clients:5174
+      - VITE_URL_REMOTE=http://localhost:5174
     ports:
       - "5173:5173"
     depends_on:
       - clients
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
