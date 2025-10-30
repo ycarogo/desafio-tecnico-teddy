@@ -7,6 +7,19 @@ Este repositório contém dois aplicativos React com Vite organizados em pastas 
 
 Ambos são TypeScript, utilizam Tailwind e Vite 7, e o host possui testes com Vitest e Testing Library.
 
+<br /><br /><br />
+
+## Vercel
+
+### Foi feito o deploy das aplicações no Vercel. As aplicações podem ser acessadas nos links abaixo:
+
+```
+HOST:    https://desafio-tecnico-teddy.vercel.app/
+CLIENTES: https://clients-desafio-tecnico-teddy.vercel.app/
+```
+
+<br /><br /><br />
+
 ### Requisitos
 
 - Node.js 18+ (recomendado 20+)
