@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SideMenu } from "./side-menu";
 import { cn } from "@/lib/utils";
-import { getNameUser, logoutService } from "@/service/login.service";
+import { useAuth } from "@/context/AuthProvider/useAuth";
 
 export default function Navbar() {
+  const { user, logout } = useAuth();
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
   const location = useLocation();
   const currentPath = location.pathname;
-  const [nameUser, setNameUser] = useState<string | null>("");
   const navigate = useNavigate();
 
   const toggleSideMenu = () => {
@@ -20,15 +20,10 @@ export default function Navbar() {
   };
 
   const clickLogout = () => {
-    logoutService();
+    logout();
     navigate("/");
   };
-  useEffect(() => {
-    const nameUser = getNameUser();
-    if (nameUser) {
-      setNameUser(nameUser);
-    }
-  }, []);
+
   return (
     <>
       <div className="w-full">
@@ -100,7 +95,7 @@ export default function Navbar() {
 
               {/* Lado direito - Cumprimento */}
               <div className="text-gray-700 font-medium">
-                Olá, <b>{nameUser}</b>!
+                Olá, <b>{user?.name}</b>!
               </div>
             </div>
           </div>

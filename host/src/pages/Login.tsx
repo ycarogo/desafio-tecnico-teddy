@@ -1,27 +1,26 @@
 import PageContainer from "@/components/layout/page-container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { isLogged, login } from "@/service/login.service";
+import { useAuth } from "@/context/AuthProvider/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function Login() {
-  useEffect(() => {
-    const checkLogged = async () => {
-      const logged = await isLogged();
-      if (logged) {
-        navigate("/dashboard");
-      }
-    };
-    checkLogged();
-  }, []);
-
   const [name, setName] = useState("");
   const navigate = useNavigate();
-  const clickLogin = () => {
-    login(name).then(() => {
+  const { user, authenticate } = useAuth();
+
+  useEffect(() => {
+    if (user) {
       navigate("/dashboard");
-    });
+    }
+  }, [user, navigate]);
+
+  const clickLogin = () => {
+    if (name.trim()) {
+      authenticate({ name: name.trim() });
+      navigate("/dashboard");
+    }
   };
 
   return (

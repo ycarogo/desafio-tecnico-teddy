@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { ArrowLeftIcon, Home, LogOut, User, UserCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { logoutService } from "@/service/login.service";
+import { useAuth } from "@/context/AuthProvider/useAuth";
 
 interface SideMenuProps {
   className?: string;
@@ -15,6 +15,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({
   onClose,
   currentPath = "/",
 }) => {
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleNavigation = (path: string) => {
@@ -23,7 +24,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({
   };
 
   const clickLogout = () => {
-    logoutService();
+    logout();
     navigate("/");
   };
 
