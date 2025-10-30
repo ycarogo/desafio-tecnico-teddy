@@ -37,7 +37,7 @@ O host depende do `clients` rodando e acessível via URL configurada em variáve
 
 ```bash
 cd clients
-npm run dev
+npm rum build && npm rum preview
 ```
 
 2. Configure no `host` a URL do remote do `clients` (dev):

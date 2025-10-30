@@ -37,5 +37,3 @@ describe("removeFormatCurrency", () => {
     expect(Number.isNaN(result)).toBe(true);
   });
 });
-
-
