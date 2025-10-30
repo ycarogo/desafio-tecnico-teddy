@@ -31,13 +31,12 @@ describe("user.service", () => {
 
   test("getUsers deve chamar Api.get com query de paginação e retornar dados", async () => {
     const mockData: OutputUsers = {
-      data: [
+      clients: [
         { id: 1, name: "Ana", salary: 1000, companyValuation: 10000 } as User,
         { id: 2, name: "Bruno", salary: 2000, companyValuation: 20000 } as User,
       ],
-      page: 1,
-      limit: 10,
-      total: 2,
+      currentPage: 1,
+      totalPages: 2,
     };
 
     (Api.get as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({

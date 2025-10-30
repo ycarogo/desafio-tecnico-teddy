@@ -30,7 +30,9 @@ describe("Clientes - Modal de criação", () => {
     cy.contains("h2", "Criar cliente").should("be.visible");
 
     // Preencher formulário
-    cy.get('input[placeholder="Digite o nome do cliente"]').type("Fulano de Tal");
+    cy.get('input[placeholder="Digite o nome do cliente"]').type(
+      "Fulano de Tal"
+    );
     cy.get('input[placeholder="Digite o salário"]').type("1500");
     cy.get('input[placeholder="Digite o valor da empresa"]').type("3500");
 
@@ -53,21 +55,28 @@ describe("Clientes - Modal de criação", () => {
     cy.intercept("GET", "**/users?page=1&limit=16", {
       statusCode: 200,
       body: {
-        clients: [{
-          id: 999,
-          name: "Fulano de Tal",
-          salary: 1500,
-          companyValuation: 3500,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        }, ...makeUsers(15, 1)],
+        clients: [
+          {
+            id: 999,
+            name: "Fulano de Tal",
+            salary: 1500,
+            companyValuation: 3500,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+          ...makeUsers(15, 1),
+        ],
         currentPage: 1,
         totalPages: 3,
       },
     }).as("refreshUsers");
 
-    // Enviar
-    cy.contains("button", "Criar cliente").click();
+    // Enviar dentro do modal
+    cy.contains("h2", "Criar cliente")
+      .closest("div.bg-white")
+      .within(() => {
+        cy.contains("button", "Criar cliente").click();
+      });
     cy.wait("@createUser");
     cy.wait("@refreshUsers");
 
@@ -75,5 +84,3 @@ describe("Clientes - Modal de criação", () => {
     cy.contains("Cliente criado com sucesso").should("be.visible");
   });
 });
-
-
