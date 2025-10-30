@@ -1,6 +1,8 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach, type Mock } from "vitest";
 import ListClients from "./ListClients";
+import * as service from "@/services/listUsers.service";
+import * as toast from "@/components/ui/Toastify";
 
 // Mocks dos serviços de storage dos clientes selecionados
 vi.mock("@/services/listUsers.service", () => ({
@@ -42,9 +44,6 @@ vi.mock("@/components/CardClient", () => ({
 }));
 
 describe("ListClients page", () => {
-  const service = await import("@/services/listUsers.service");
-  const toast = await import("@/components/ui/Toastify");
-
   beforeEach(() => {
     vi.clearAllMocks();
   });

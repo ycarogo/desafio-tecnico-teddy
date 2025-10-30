@@ -6,6 +6,7 @@ import {
   clearUsers,
   hasUser,
 } from "./listUsers.service";
+import type { User } from "@/types/users";
 
 const STORAGE_KEY = "teddy_users_list";
 
@@ -29,7 +30,7 @@ describe("listUsers.service", () => {
 
   test("addUser deve adicionar um novo usuário quando id não existir", () => {
     const user = { id: 1, name: "Ana", salary: 1000, companyValuation: 10000 };
-    addUser(user as any);
+    addUser(user as User);
 
     const stored = JSON.parse(getStoredJson() || "[]");
     expect(stored).toHaveLength(1);
@@ -38,8 +39,18 @@ describe("listUsers.service", () => {
   });
 
   test("addUser deve atualizar usuário existente quando id já existir", () => {
-    const user = { id: 1, name: "Ana", salary: 1000, companyValuation: 10000 } as any;
-    const updated = { id: 1, name: "Ana Maria", salary: 1200, companyValuation: 11000 } as any;
+    const user = {
+      id: 1,
+      name: "Ana",
+      salary: 1000,
+      companyValuation: 10000,
+    } as User;
+    const updated = {
+      id: 1,
+      name: "Ana Maria",
+      salary: 1200,
+      companyValuation: 11000,
+    } as User;
 
     addUser(user);
     addUser(updated);
@@ -74,5 +85,3 @@ describe("listUsers.service", () => {
     expect(hasUser(1)).toBe(false);
   });
 });
-
-
