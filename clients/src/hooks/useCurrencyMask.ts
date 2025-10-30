@@ -1,5 +1,5 @@
 import type { ChangeEvent } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function useCurrencyMask(
   initialValue: number = 0,
@@ -40,6 +40,23 @@ export function useCurrencyMask(
     setDisplayValue(formatted);
     setNumericValue(value);
   };
+
+  // Recalcula a exibição quando prefix/suffix/withDecimals mudarem
+  useEffect(() => {
+    if (numericValue === 0) {
+      // Mantém vazio se o valor inicial/atual é 0 (comportamento existente)
+      setDisplayValue("");
+      return;
+    }
+
+    const formatted = formatCurrency(
+      (numericValue * (withDecimals ? 100 : 1)).toString(),
+      prefix,
+      suffix,
+      withDecimals
+    );
+    setDisplayValue(formatted);
+  }, [prefix, suffix, withDecimals, numericValue]);
 
   return {
     displayValue,
